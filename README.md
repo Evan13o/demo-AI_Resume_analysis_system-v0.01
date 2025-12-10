@@ -19,3 +19,8 @@ pip install -r requirements.txt
 
 # 运行应用
 python main.py
+
+streamlit run frontend.py
+
+redis-cli ping
+mongod
