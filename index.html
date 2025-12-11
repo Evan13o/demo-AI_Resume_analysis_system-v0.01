@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>AI 简历分析系统</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <h1>🤖 AI 简历分析系统</h1>
+
+  <!-- 导航 -->
+  <nav>
+    <button onclick="show('upload')">📤 简历上传</button>
+    <button onclick="show('analysis')">🔍 简历分析</button>
+    <button onclick="show('match')">🤝 职位匹配</button>
+  </nav>
+
+  <!-- 1. 上传 -->
+  <section id="upload" class="page">
+    <h2>📤 简历上传</h2>
+    <input type="file" id="fileInput" accept=".pdf">
+    <button onclick="doUpload()">上传</button>
+    <pre id="uploadResult"></pre>
+  </section>
+
+  <!-- 2. 分析 -->
+  <section id="analysis" class="page" style="display:none">
+    <h2>🔍 简历分析</h2>
+    <button onclick="doAnalysis()">开始分析</button>
+    <pre id="analysisResult"></pre>
+  </section>
+
+  <!-- 3. 匹配 -->
+  <section id="match" class="page" style="display:none">
+    <h2>🤝 职位匹配</h2>
+    <textarea id="jobDesc" rows="6" placeholder="粘贴职位描述……"></textarea><br>
+    <button onclick="doMatch()">开始匹配</button>
+    <pre id="matchResult"></pre>
+  </section>
+
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>
