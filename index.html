@@ -3,385 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 AI简历分析系统</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <title>AI简历分析系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #f4f6f9;
         }
-        
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .app {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            min-height: 90vh;
-        }
-        
-        .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
             padding: 30px;
-            width: 250px;
-            position: fixed;
-            height: 100%;
-        }
-        
-        .main-content {
-            margin-left: 250px;
-            padding: 40px;
-        }
-        
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-        
-        .header h1 {
-            color: #333;
-            font-size: 28px;
-        }
-        
-        .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 60px 20px;
-            text-align: center;
-            margin: 20px 0;
-            background: #f8f9fa;
-            transition: all 0.3s;
-        }
-        
-        .upload-area:hover {
-            background: #eef2ff;
-            border-color: #764ba2;
-        }
-        
-        .button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .result-box {
-            background: #f8f9fa;
             border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
-            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
-        .nav-button {
-            display: block;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            cursor: pointer;
-            text-align: left;
-            font-size: 16px;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .nav-button:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateX(5px);
-        }
-        
-        .nav-button.active {
-            background: rgba(255,255,255,0.3);
-            font-weight: bold;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        textarea {
-            width: 100%;
-            min-height: 200px;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            margin: 20px 0;
-            font-family: inherit;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                position: static;
-                width: 100%;
-                height: auto;
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
+        .sidebar {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 sidebar">
+                <h4>功能选择</h4>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                    <button class="nav-link active" id="upload-tab" data-bs-toggle="pill" data-bs-target="#upload" type="button" role="tab">简历上传</button>
+                    <button class="nav-link" id="analysis-tab" data-bs-toggle="pill" data-bs-target="#analysis" type="button" role="tab">简历分析</button>
+                    <button class="nav-link" id="match-tab" data-bs-toggle="pill" data-bs-target="#match" type="button" role="tab">职位匹配</button>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <!-- 简历上传 -->
+                    <div class="tab-pane fade show active" id="upload" role="tabpanel">
+                        <h2 class="mb-4">📤 简历上传</h2>
+                        <input type="file" id="resumeFile" accept=".pdf" class="form-control mb-3">
+                        <button id="uploadBtn" class="btn btn-primary">上传简历</button>
+                        <div id="uploadResult" class="mt-3"></div>
+                    </div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        
-        // 修改为你的后端 API 地址
-        const BACKEND_URL = "https://fastapi-web-fraork-gavh-vmrrdjglva.cn-hangzhou.fcapp.run";
-        
-        function App() {
-            const [activeTab, setActiveTab] = useState('upload');
-            const [resumeInfo, setResumeInfo] = useState(null);
-            const [file, setFile] = useState(null);
-            const [jobDescription, setJobDescription] = useState('');
-            const [analysisResult, setAnalysisResult] = useState(null);
-            const [matchResult, setMatchResult] = useState(null);
-            const [loading, setLoading] = useState(false);
-            const [error, setError] = useState('');
-            
-            const handleFileUpload = async () => {
-                if (!file) {
-                    alert('请选择文件');
-                    return;
-                }
-                
-                setLoading(true);
-                setError('');
-                
-                const formData = new FormData();
-                formData.append('file', file);
-                
-                try {
-                    const response = await axios.post(`${BACKEND_URL}/upload/resume`, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    });
-                    
-                    setResumeInfo(response.data.resume_info);
-                    alert('简历上传成功！');
-                } catch (err) {
-                    setError('上传失败: ' + (err.response?.data?.detail || err.message));
-                } finally {
-                    setLoading(false);
-                }
-            };
-            
-            const handleAnalyze = async () => {
-                if (!resumeInfo) {
-                    alert('请先上传简历');
-                    return;
-                }
-                
-                setLoading(true);
-                setError('');
-                
-                try {
-                    const response = await axios.post(`${BACKEND_URL}/analyze/resume`, resumeInfo);
-                    setAnalysisResult(response.data);
-                    alert('分析完成！');
-                } catch (err) {
-                    setError('分析失败: ' + (err.response?.data?.detail || err.message));
-                } finally {
-                    setLoading(false);
-                }
-            };
-            
-            const handleMatch = async () => {
-                if (!resumeInfo) {
-                    alert('请先上传简历');
-                    return;
-                }
-                
-                if (!jobDescription.trim()) {
-                    alert('请输入职位描述');
-                    return;
-                }
-                
-                setLoading(true);
-                setError('');
-                
-                try {
-                    const response = await axios.post(`${BACKEND_URL}/match/resume`, {
-                        resume_info: resumeInfo,
-                        job_description: {
-                            description: jobDescription
-                        }
-                    });
-                    
-                    setMatchResult(response.data.match_result);
-                    alert('匹配完成！');
-                } catch (err) {
-                    setError('匹配失败: ' + (err.response?.data?.detail || err.message));
-                } finally {
-                    setLoading(false);
-                }
-            };
-            
-            return (
-                <div className="container">
-                    <div className="app">
-                        <div className="sidebar">
-                            <h2>🤖 AI简历分析</h2>
-                            <button 
-                                className={`nav-button ${activeTab === 'upload' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('upload')}
-                            >
-                                📤 简历上传
-                            </button>
-                            <button 
-                                className={`nav-button ${activeTab === 'analyze' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('analyze')}
-                            >
-                                🔍 简历分析
-                            </button>
-                            <button 
-                                className={`nav-button ${activeTab === 'match' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('match')}
-                            >
-                                🤝 职位匹配
-                            </button>
-                        </div>
-                        
-                        <div className="main-content">
-                            <div className="header">
-                                <h1>AI简历分析系统</h1>
-                            </div>
-                            
-                            {error && (
-                                <div style={{color: 'red', padding: '10px', background: '#ffe6e6', borderRadius: '5px', marginBottom: '20px'}}>
-                                    {error}
-                                </div>
-                            )}
-                            
-                            {loading ? (
-                                <div className="loading">
-                                    <div className="spinner"></div>
-                                    <p>处理中，请稍候...</p>
-                                </div>
-                            ) : (
-                                <>
-                                    {activeTab === 'upload' && (
-                                        <div>
-                                            <h2>简历上传</h2>
-                                            <div className="upload-area">
-                                                <input 
-                                                    type="file" 
-                                                    accept=".pdf" 
-                                                    onChange={(e) => setFile(e.target.files[0])}
-                                                    style={{marginBottom: '20px'}}
-                                                />
-                                                <button className="button" onClick={handleFileUpload}>
-                                                    上传简历
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                    
-                                    {activeTab === 'analyze' && (
-                                        <div>
-                                            <h2>简历分析</h2>
-                                            {resumeInfo ? (
-                                                <>
-                                                    <button className="button" onClick={handleAnalyze}>
-                                                        开始分析
-                                                    </button>
-                                                    {analysisResult && (
-                                                        <div className="result-box">
-                                                            <h3>分析结果</h3>
-                                                            <pre>{JSON.stringify(analysisResult, null, 2)}</pre>
-                                                        </div>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <p>请先上传简历</p>
-                                            )}
-                                        </div>
-                                    )}
-                                    
-                                    {activeTab === 'match' && (
-                                        <div>
-                                            <h2>职位匹配</h2>
-                                            {resumeInfo ? (
-                                                <>
-                                                    <textarea 
-                                                        placeholder="请输入职位描述..."
-                                                        value={jobDescription}
-                                                        onChange={(e) => setJobDescription(e.target.value)}
-                                                    />
-                                                    <button className="button" onClick={handleMatch}>
-                                                        开始匹配
-                                                    </button>
-                                                    {matchResult && (
-                                                        <div className="result-box">
-                                                            <h3>匹配结果</h3>
-                                                            <pre>{JSON.stringify(matchResult, null, 2)}</pre>
-                                                        </div>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <p>请先上传简历</p>
-                                            )}
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        </div>
+                    <!-- 简历分析 -->
+                    <div class="tab-pane fade" id="analysis" role="tabpanel">
+                        <h2 class="mb-4">🔍 简历分析</h2>
+                        <button id="analyzeBtn" class="btn btn-success" disabled>开始分析</button>
+                        <div id="analysisResult" class="mt-3"></div>
+                    </div>
+
+                    <!-- 职位匹配 -->
+                    <div class="tab-pane fade" id="match" role="tabpanel">
+                        <h2 class="mb-4">🤝 职位匹配</h2>
+                        <textarea id="jobDescription" class="form-control mb-3" rows="4" placeholder="输入职位描述"></textarea>
+                        <button id="matchBtn" class="btn btn-info" disabled>开始匹配</button>
+                        <div id="matchResult" class="mt-3"></div>
                     </div>
                 </div>
-            );
-        }
-        
-        ReactDOM.render(<App />, document.getElementById('root'));
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 配置后端API地址
+        const BACKEND_URL = 'https://fastapi-web-framework-r-chrrdjglak.cn-hangzhou.fcapp.run';
+
+        // 全局状态管理
+        let resumeInfo = null;
+
+        // 文件上传处理
+        document.getElementById('uploadBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('resumeFile');
+            const uploadResult = document.getElementById('uploadResult');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            
+            if (!fileInput.files.length) {
+                alert('请选择PDF简历');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/upload/resume`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('上传失败');
+                }
+
+                const result = await response.json();
+                resumeInfo = result.resume_info;
+                
+                uploadResult.innerHTML = `
+                    <div class="alert alert-success">
+                        简历上传成功！
+                        <pre>${JSON.stringify(result.resume_info, null, 2)}</pre>
+                    </div>
+                `;
+                
+                // 解锁分析和匹配按钮
+                analyzeBtn.disabled = false;
+                document.getElementById('matchBtn').disabled = false;
+            } catch (error) {
+                uploadResult.innerHTML = `
+                    <div class="alert alert-danger">
+                        上传失败: ${error.message}
+                    </div>
+                `;
+            }
+        });
+
+        // 简历分析处理
+        document.getElementById('analyzeBtn').addEventListener('click', async () => {
+            const analysisResult = document.getElementById('analysisResult');
+            
+            if (!resumeInfo) {
+                alert('请先上传简历');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/analyze/resume`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(resumeInfo)
+                });
+
+                if (!response.ok) {
+                    throw new Error('分析失败');
+                }
+
+                const result = await response.json();
+                analysisResult.innerHTML = `
+                    <div class="alert alert-success">
+                        简历分析完成！
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                analysisResult.innerHTML = `
+                    <div class="alert alert-danger">
+                        分析失败: ${error.message}
+                    </div>
+                `;
+            }
+        });
+
+        // 职位匹配处理
+        document.getElementById('matchBtn').addEventListener('click', async () => {
+            const jobDescription = document.getElementById('jobDescription').value;
+            const matchResult = document.getElementById('matchResult');
+            
+            if (!resumeInfo) {
+                alert('请先上传简历');
+                return;
+            }
+
+            if (!jobDescription.trim()) {
+                alert('请输入职位描述');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/match/resume`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        resume_info: resumeInfo,
+                        job_description: { description: jobDescription }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('匹配失败');
+                }
+
+                const result = await response.json();
+                matchResult.innerHTML = `
+                    <div class="alert alert-success">
+                        职位匹配完成！
+                        <pre>${JSON.stringify(result.match_result, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                matchResult.innerHTML = `
+                    <div class="alert alert-danger">
+                        匹配失败: ${error.message}
+                    </div>
+                `;
+            }
+        });
     </script>
 </body>
 </html>
