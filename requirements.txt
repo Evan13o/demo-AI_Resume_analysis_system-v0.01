@@ -2,9 +2,14 @@ uvicorn
 fastapi
 python-multipart
 pymupdf
-transformers
-torch
 scikit-learn
 numpy
 pandas
 jieba
+streamlit==1.29.0
+redis==5.0.1
+transformers==4.36.0
+torch==2.1.1
+keybert
+python-docx
+PyPDF2
