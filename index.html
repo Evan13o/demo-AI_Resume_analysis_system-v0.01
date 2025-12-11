@@ -82,21 +82,55 @@
                 alert('请选择PDF简历');
                 return;
             }
-
+        
+            const file = fileInput.files[0];
             const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-
+            formData.append('file', file);
+        
             try {
+                // 详细日志
+                console.log('文件信息:', {
+                    name: file.name,
+                    size: file.size,
+                    type: file.type
+                });
+        
+                // 文件大小限制
+                const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+                if (file.size > MAX_FILE_SIZE) {
+                    throw new Error(`文件大小不能超过 ${MAX_FILE_SIZE / 1024 / 1024}MB`);
+                }
+        
+                // 文件类型验证
+                if (file.type !== 'application/pdf') {
+                    throw new Error('只允许上传PDF文件');
+                }
+        
                 const response = await fetch(`${BACKEND_URL}/upload/resume`, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    // 添加更多调试信息
+                    headers: {
+                        // 可选：如果后端要求特定的文件名
+                        'X-File-Name': encodeURIComponent(file.name)
+                    }
                 });
-
+        
+                // 详细的错误处理
                 if (!response.ok) {
-                    throw new Error('上传失败');
+                    const errorText = await response.text();
+                    console.error('Server Response:', {
+                        status: response.status,
+                        statusText: response.statusText,
+                        body: errorText
+                    });
+                    throw new Error(`上传失败：${response.status} - ${errorText}`);
                 }
-
+        
                 const result = await response.json();
+                
+                console.log('上传成功响应:', result);
+                
                 resumeInfo = result.resume_info;
                 
                 uploadResult.innerHTML = `
@@ -110,13 +144,18 @@
                 analyzeBtn.disabled = false;
                 document.getElementById('matchBtn').disabled = false;
             } catch (error) {
+                console.error('完整错误信息:', error);
+                
                 uploadResult.innerHTML = `
                     <div class="alert alert-danger">
                         上传失败: ${error.message}
+                        <br>
+                        详细信息: ${error.stack}
                     </div>
                 `;
             }
         });
+
 
         // 简历分析处理
         document.getElementById('analyzeBtn').addEventListener('click', async () => {
