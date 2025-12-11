@@ -11,4 +11,4 @@ redis==7.1.0
 transformers==4.36.0
 keybert
 python-docx
-
+motor==3.7.1
